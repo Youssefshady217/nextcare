@@ -146,9 +146,8 @@ if uploaded_file:
         
 
         # إخراج PDF
-        pdf_buffer = BytesIO()
-        pdf.output(pdf_buffer,dest='F')
-        pdf_buffer.seek(0)
+        pdf_data = pdf.output(dest='S')
+        pdf_bytes = bytes(pdf_data)
 
         st.download_button(
             label="⬇️ تحميل إيصال PDF",
@@ -190,6 +189,7 @@ if uploaded_file:
 
 
        
+
 
 
 
