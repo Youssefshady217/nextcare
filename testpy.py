@@ -20,10 +20,7 @@ uploaded_file = st.file_uploader("📤 ارفع ملف PDF", type=["pdf"])
 
 if uploaded_file:
     # ------------------ قراءة النصوص (البيانات الأساسية) ------------------
-    file_bytes = uploaded_file.read()
-    doc = fitz.open(stream=file_bytes, filetype="pdf")
-    pdfplumber_file = BytesIO(file_bytes)
-
+    doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
 
     all_lines = []
     for page in doc:
@@ -44,7 +41,7 @@ if uploaded_file:
 
     # ------------------ قراءة أول جدول فقط ------------------
     table_data = []
-    with pdfplumber.open(pdfplumber_file) as pdf:
+    with pdfplumber.open(uploaded_file) as pdf:
         for page in pdf.pages:
             tables = page.extract_tables()
             if tables:
@@ -192,6 +189,7 @@ if uploaded_file:
 
 
        
+
 
 
 
