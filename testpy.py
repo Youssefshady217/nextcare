@@ -147,14 +147,14 @@ if uploaded_file:
 
         # إخراج PDF
         pdf_buffer = BytesIO()
-        pdf.output(pdf_buffer, dest='F')
+        pdf.output(pdf_buffer,dest='F')
         pdf_buffer.seek(0)
-        
+
         st.download_button(
-        label="Download PDF",
-        data=pdf_buffer,
-        file_name="receipt.pdf",
-        mime="application/pdf"
+            label="⬇️ تحميل إيصال PDF",
+            data=pdf_buffer,
+            file_name="client_receipt.pdf",
+            mime="application/pdf"
         )
 
 
@@ -190,6 +190,7 @@ if uploaded_file:
 
 
        
+
 
 
 
