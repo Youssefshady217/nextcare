@@ -147,6 +147,10 @@ if uploaded_file:
 
         # إخراج PDF
         pdf_bytes = pdf.output(dest="S")
+        if isinstance(pdf_data, str):
+            pdf_data = pdf_data.encode("latin-1")
+        elif isinstance(pdf_data, bytearray):
+            pdf_data = bytes(pdf_data)
         pdf_buffer = BytesIO(pdf_bytes)
 
         st.download_button(
@@ -189,6 +193,7 @@ if uploaded_file:
 
 
        
+
 
 
 
