@@ -6,15 +6,43 @@ from fpdf import FPDF
 from io import BytesIO
 import arabic_reshaper
 from bidi.algorithm import get_display
+st.set_page_config(page_title="صيدلية د/ نادر", layout="centered")
+
+def reshape_arabic(text):
+    return get_display(arabic_reshaper.reshape(str(text)))
+
+# تسجيل الدخول
+VALID_USERNAME = "romany"
+VALID_PASSWORD = "1111"
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    st.title("🔐 تسجيل الدخول")
+
+    with st.form("login_form"):
+        username = st.text_input("اسم المستخدم")
+        password = st.text_input("كلمة المرور", type="password")
+        login = st.form_submit_button("دخول")
+
+        if login:
+            if username == VALID_USERNAME and password == VALID_PASSWORD:
+                st.session_state.logged_in = True
+                st.success("✅ تم تسجيل الدخول بنجاح")
+                st.rerun()
+            else:
+                st.error("❌ اسم المستخدم أو كلمة المرور غير صحيحة")
+    st.stop()
+
+# عنوان التطبيق
+st.title("د/نادر نبيل فهمى")
 
 
 def fix_arabic(text):
     if not text:
         return ""
     return get_display(arabic_reshaper.reshape(str(text)))
-
-
-st.title("📑 استخراج بيانات العميل + أول جدول + إنشاء إيصال PDF")
 
 uploaded_file = st.file_uploader("📤 ارفع ملف PDF", type=["pdf"])
 
@@ -84,13 +112,23 @@ if uploaded_file:
     if st.button("📄 توليد إيصال PDF") and df is not None:
         class PDF(FPDF):
             def header(self):
+                pdf.add_font("Amiri", "", "Amiri-Regular.ttf", uni=True)
+                self.add_font("Amiri", "B", "Amiri-Bold.ttf", uni=True)
+                self.set_fill_color(230, 230, 230)
+                self.image("logo.png", x=10, y=8, w=20)
+                self.set_font("Amiri", "B", 14)
+                self.cell(0, 10, fix_arabic("صيدلية د/ نادر نبيل فهمى"), ln=1, align="C")
+                self.set_font("Amiri", "", 11)
+                self.cell(0, 10, fix_arabic("م.ض: 01-40-181-00591-5"), ln=1, align="C")
+                self.cell(0, 10, fix_arabic("س.ت: 94294"), ln=1, align="C")
+                self.set_font("Amiri", "", 10)
+                self.cell(0, 10, fix_arabic("العنوان: اسيوط - شركه فريال - شارع الامام علي"), ln=1, align="C")
+                self.cell(0, 10, fix_arabic("تليفون: 01211136366"), ln=1, align="C")
+                self.ln(5)
                 try:
                     self.image("logo.png", 10, 8, 20)
                 except:
                     pass
-                self.set_font("Amiri", "", 16)
-                self.cell(0, 10, fix_arabic("إيصال بيانات العميل"), ln=1, align="C")
-                self.ln(10)
 
             def footer(self):
                 self.set_y(-15)
@@ -146,18 +184,14 @@ if uploaded_file:
         
 
         # إخراج PDF
-        pdf_data = pdf.output(dest="S")
-        if isinstance(pdf_data, str):
-            pdf_data = pdf_data.encode("latin-1")
-        elif isinstance(pdf_data, bytearray):
-            pdf_data = bytes(pdf_data)
-        pdf_buffer = BytesIO(pdf_data)
+        pdf_data = pdf.output(dest='S')
+        pdf_bytes = bytes(pdf_data)
 
         st.download_button(
-        label="⬇️ تحميل إيصال PDF",
-        data=pdf_buffer,
-        file_name="approval_receipt.pdf",
-        mime="application/pdf"
+            label="⬇️ تحميل إيصال PDF",
+            data=pdf_bytes,
+            file_name="client_receipt.pdf",
+            mime="application/pdf"
         )
 
 
@@ -193,6 +227,7 @@ if uploaded_file:
 
 
        
+
 
 
 
