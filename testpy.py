@@ -104,6 +104,14 @@ if uploaded_file:
             "ﺣﺼﺔ ﺍﻟﻤﺮﻳﺾ": "حصة المريض"
         }
         df = df.rename(columns=rename_map)
+        # تحويل الأعمدة لأرقام (عشان الضرب يشتغل)
+        df["الكمية المطلوبة"] = pd.to_numeric(df["الكمية المطلوبة"], errors="coerce").fillna(0)
+        df["سعر الوحدة"] = pd.to_numeric(df["سعر الوحدة"], errors="coerce").fillna(0)
+
+        # حساب حصة المريض = الكمية × سعر الوحدة
+        df["حصة المريض"] = df["الكمية المطلوبة"] * df["سعر الوحدة"]
+
+        
 
         st.subheader("📌 الجدول المستخرج")
         st.dataframe(df, use_container_width=True)
@@ -164,10 +172,8 @@ if uploaded_file:
         for _, row in df.iterrows():
             x_start = pdf.get_x()
             y_start = pdf.get_y()
-
             # 🟢 اسم الدواء (multi_cell)
             pdf.multi_cell(col_widths[0], 10, fix_arabic(str(row[headers[0]])), border=1, align="R")
-
             # نرجع مكان المؤشر لبداية السطر + بعد أول عمود
             x_after_name = x_start + col_widths[0]
             y_end_name = pdf.get_y()
@@ -181,6 +187,10 @@ if uploaded_file:
 
             # ننقل للمكان تحت الصف بالكامل
             pdf.ln(row_height)
+        total = pd.to_numeric(df["حصة المريض"], errors="coerce").sum()
+        pdf.set_font("Amiri", "B", 12)
+        pdf.cell(0, 30, fix_arabic(f"الإجمالي: {round(total, 2)}"), ln=1, align="R")
+
         
 
         # إخراج PDF
@@ -227,6 +237,7 @@ if uploaded_file:
 
 
        
+
 
 
 
