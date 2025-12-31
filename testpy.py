@@ -101,7 +101,7 @@ if uploaded_file:
             "ﺍﻟﻜﻤﻴﺔ ﺍﻟﻤﻮﺍﻓﻖ\nعليها": "الكمية الموافق عليها",
             "ﺳﻌﺮ ﺍﻟﻮﺣﺪﺓ": "سعر الوحدة",
             "ﺍﻟﺴﻌﺮ ﺍﻟﻤﻮﺍﻓق\nعليه": "الإجمالي",
-            "ﺣﺼﺔ ﺍﻟﻤﺮﻳﺾ": "حصة المريض"
+            "ﺣﺼﺔ ﺍﻟﻤﺮﻳﺾ": "سعر الكمية"
         }
         df = df.rename(columns=rename_map)
         # تحويل الأعمدة لأرقام (عشان الضرب يشتغل)
@@ -109,7 +109,11 @@ if uploaded_file:
         df["سعر الوحدة"] = pd.to_numeric(df["سعر الوحدة"], errors="coerce").fillna(0)
 
         # حساب حصة المريض = الكمية × سعر الوحدة
-        df["حصة المريض"] = df["الكمية المطلوبة"] * df["سعر الوحدة"]
+        df["سعر الكمية"] = df["الكمية المطلوبة"] * df["سعر الوحدة"]
+        df = df[
+            (df["اسم الدواء"].astype(str).str.strip() != "") &
+            ((df["الكمية المطلوبة"] != 0) | (df["سعر الوحدة"] != 0))
+        ]
 
         
 
@@ -187,7 +191,7 @@ if uploaded_file:
 
             # ننقل للمكان تحت الصف بالكامل
             pdf.ln(row_height)
-        total = pd.to_numeric(df["حصة المريض"], errors="coerce").sum()
+        total = pd.to_numeric(df["سعر الكمية"], errors="coerce").sum()
         pdf.set_font("Amiri", "B", 12)
         pdf.cell(0, 30, fix_arabic(f"الإجمالي: {round(total, 2)}"), ln=1, align="R")
 
@@ -237,6 +241,7 @@ if uploaded_file:
 
 
        
+
 
 
 
