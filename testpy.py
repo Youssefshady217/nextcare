@@ -64,8 +64,8 @@ if uploaded_file:
             approval_no = line.strip()
         elif idx == 7: # اسم المؤمن
             client_name = line.strip()
-        elif idx == 24: # التاريخ
-            main_date = line.replace("ﺍﻟﺘﺎﺭﻳﺦ", "").strip()
+        elif idx == 26: # التاريخ
+            main_date = line.replace("ﺗﺎﺭﻳﺦ ﺍﻟﺪﺧﻮﻝ", "").strip()
 
     # ------------------ قراءة أول جدول فقط ------------------
     table_data = []
@@ -241,6 +241,7 @@ if uploaded_file:
 
 
        
+
 
 
 
