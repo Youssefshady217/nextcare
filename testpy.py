@@ -198,8 +198,12 @@ if uploaded_file:
         
 
         # إخراج PDF
-        pdf_data = pdf.output(dest='S')
-        pdf_bytes = bytes(pdf_data)
+        pdf_output = pdf.output(dest='S')
+        if isinstance(pdf_output, str):
+            pdf_bytes = pdf_output.encode("latin-1")
+        else:
+            pdf_bytes = pdf_output
+
 
         st.download_button(
             label="⬇️ تحميل إيصال PDF",
@@ -241,6 +245,7 @@ if uploaded_file:
 
 
        
+
 
 
 
