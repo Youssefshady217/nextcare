@@ -194,16 +194,16 @@ if uploaded_file:
         
 
         # إخراج PDF
-        # إخراج PDF في BytesIO
-        pdf_bytesio = BytesIO()
-        pdf.output(pdf_bytesio)  # يكتب الـ PDF مباشرة في BytesIO
-        pdf_bytesio.seek(0)       # مهم، رجع المؤشر لبداية الملف
+        # إخراج PDF كـ string
+        pdf_str = pdf.output(dest='S')  # string
+        pdf_bytes = pdf_str.encode('latin-1')  # لازم encode للـ bytes
 
+        # تحميل PDF
         st.download_button(
-           label="⬇️ تحميل إيصال PDF",
-           data=pdf_bytesio,
-           file_name="client_receipt.pdf",
-           mime="application/pdf"
+            label="⬇️ تحميل إيصال PDF",
+            data=pdf_bytes,
+            file_name="client_receipt.pdf",
+            mime="application/pdf"
         )
 
 
@@ -239,7 +239,9 @@ if uploaded_file:
 
 
 
+
        
+
 
 
 
