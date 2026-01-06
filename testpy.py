@@ -170,6 +170,9 @@ if uploaded_file:
         pdf.set_font("Amiri", "B", 12)
         pdf.set_fill_color(255, 255, 255)  # باقي الجدول أبيض
         for _, row in df.iterrows():
+            # ✅ شرط: نتجاهل الصف لو الكمية الموافق عليها صفر
+            if row["الكمية الموافق عليها"] == 0:
+                continue  # تخطى هذا الصف
             x_start = pdf.get_x()
             y_start = pdf.get_y()
             # 🟢 اسم الدواء (multi_cell)
@@ -241,6 +244,7 @@ if uploaded_file:
 
 
        
+
 
 
 
