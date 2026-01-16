@@ -198,8 +198,8 @@ if uploaded_file:
 
         # إخراج PDF
         # إخراج PDF كـ string
-        pdf_str = pdf.output(dest='S')  # string
-        pdf_bytes = pdf_str.encode('latin-1')  # لازم encode للـ bytes
+        pdf_bytes = pdf.output(dest='S')  # string
+         
 
         # تحميل PDF
         st.download_button(
@@ -244,6 +244,7 @@ if uploaded_file:
 
 
        
+
 
 
 
