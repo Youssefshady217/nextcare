@@ -198,13 +198,16 @@ if uploaded_file:
 
         # إخراج PDF
         # إخراج PDF كـ string
-        pdf_bytes = pdf.output(dest='S')  # string
+        pdf_output = pdf.output(dest='S')
+        if isinstance(pdf_output, str):
+            pdf_output = pdf_output.encode('latin-1')
+        pdf_buffer = BytesIO(pdf_output)
          
 
         # تحميل PDF
         st.download_button(
             label="⬇️ تحميل إيصال PDF",
-            data=pdf_bytes,
+            data=pdf_buffer,
             file_name="client_receipt.pdf",
             mime="application/pdf"
         )
@@ -244,6 +247,7 @@ if uploaded_file:
 
 
        
+
 
 
 
